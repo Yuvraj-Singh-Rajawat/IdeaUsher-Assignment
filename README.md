@@ -61,7 +61,7 @@ This is a RESTful API that allows users to create, filter, search, and retrieve 
 1. Clone the repository:
    ```bash
    git clone https://github.com/Yuvraj-Singh-Rajawat/IdeaUsher-Assignment.git
-   cd blog-api
+   cd IdeaUsher-Assignment
    ```
 
 2. Install dependencies:
