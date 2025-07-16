@@ -101,7 +101,7 @@ This is a RESTful API that allows users to create, filter, search, and retrieve 
 | POST   | `/api/posts`                | Create a post with title, description, tags, and image       |
 | GET    | `/api/posts`                | Get all posts with optional filter, sort, and pagination     |
 | GET    | `/api/posts/search?keyword=...`| Search posts by title, description, tags, image URL          |
-| GET    | `/api/posts/filter?tags=...`| Filter posts by tag names or tag IDs                         |
+| GET    | `/api/posts/filter?tags=...`| Filter posts by tag names                       |
 
 ### 📥 Create a Post (with image)
 - Method: `POST /api/posts`
