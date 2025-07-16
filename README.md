@@ -7,7 +7,8 @@ This is a RESTful API that allows users to create, filter, search, and retrieve 
 - Create posts with compressed image uploads (via `sharp`) to AWS S3
 - Attach multiple **predefined** tags to a post (many-to-many relationship)
 - Search posts by title, description, image URL, or tag names
-- Filter, sort, and paginate post listings
+- Filter posts by tags using a dedicated endpoint
+- Sort and paginate post listings
 - Create and manage tags
 - Modular file structure with clean and maintainable code
 - Uses AWS SDK v3 and MongoDB via Mongoose
@@ -27,7 +28,6 @@ This is a RESTful API that allows users to create, filter, search, and retrieve 
 ## 📁 Folder Structure
 
 ```
-
 .
 ├── config/
 │   ├── db.js
@@ -53,7 +53,6 @@ This is a RESTful API that allows users to create, filter, search, and retrieve 
 ├── package.json
 ├── package-lock.json
 └── README.md
-
 ```
 
 ## 📦 Installation
@@ -97,11 +96,12 @@ This is a RESTful API that allows users to create, filter, search, and retrieve 
 
 ### ✅ Post APIs
 
-| Method | Endpoint          | Description                                           |
-|--------|-------------------|-------------------------------------------------------|
-| POST   | `/api/posts`      | Create a post with title, description, tags, and image       |
-| GET    | `/api/posts`      | Get all posts with optional filter, sort, pagination |
-| GET    | `/api/posts/search?keyword=...` | Search posts by title, description, tags, image URL |
+| Method | Endpoint                    | Description                                                  |
+|--------|-----------------------------|--------------------------------------------------------------|
+| POST   | `/api/posts`                | Create a post with title, description, tags, and image       |
+| GET    | `/api/posts`                | Get all posts with optional filter, sort, and pagination     |
+| GET    | `/api/posts/search?keyword=...`| Search posts by title, description, tags, image URL          |
+| GET    | `/api/posts/filter?tags=...`| Filter posts by tag names or tag IDs                         |
 
 ### 📥 Create a Post (with image)
 - Method: `POST /api/posts`
