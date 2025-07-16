@@ -10,13 +10,12 @@ const connectDB = require("./config/db");
 const postRouter = require("./routes/postRoutes");
 const tagRouter = require("./routes/tagRoutes");
 
-
-
 connectDB();
 
 app.use("/api/posts", postRouter);
 app.use("/api/tags", tagRouter);
 
+// for testing purposes
 app.get("/", (req, res) => {
   res.send("API is running Fine😊");
 });

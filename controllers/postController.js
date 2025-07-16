@@ -6,13 +6,16 @@ const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { v4: uuid } = require('uuid');
 const sharp = require('sharp'); 
 
+// Create a new post
 exports.createPost = async (req, res) => {
   try {
     const { title, desc } = req.body;
     let tagNames = req.body.tags;
 
+    // if tags are not provided, return an error
     if (!tagNames) return res.status(400).json({ message: 'Tags are required' });
 
+    // If tags are provided as a string, parse it to an array
     if (typeof tagNames === 'string') {
       try {
         tagNames = JSON.parse(tagNames);
@@ -21,10 +24,12 @@ exports.createPost = async (req, res) => {
       }
     }
 
+    // Ensure tags is an array
     if (!Array.isArray(tagNames)) {
       return res.status(400).json({ message: 'Tags must be an array' });
     }
 
+    // Check if all tags exist in the database
     const foundTags = await Tag.find({ name: { $in: tagNames } });
     if (foundTags.length !== tagNames.length) {
       const foundNames = foundTags.map(t => t.name);
@@ -93,6 +98,7 @@ exports.getAllPosts = async (req, res) => {
       query.tags = tag; 
     }
 
+    // find the posts based on the query(initially empty if tag exists then it will be filled with the tag)
     const posts = await Post.find(query)
       .populate('tags')
       .sort({ [sort]: order === 'description' ? -1 : 1 })
@@ -122,21 +128,60 @@ exports.searchPosts = async (req, res) => {
 
     const regex = new RegExp(keyword, 'i');
 
+    // Find tags that match the keyword
     const matchingTags = await Tag.find({ name: regex });
     const matchingTagIds = matchingTags.map(tag => tag._id);
-
+    
+    // Find posts that match the keyword in title, desc, image or tags
     const posts = await Post.find({
       $or: [
         { title: regex },
         { desc: regex },
         { image: regex },
-        { tags: { $in: matchingTagIds } } // posts that include matching tag IDs
+        { tags: { $in: matchingTagIds } }
       ]
     }).populate('tags');
 
     res.json(posts);
   } catch (err) {
     console.error('Search error:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Filter posts by tags (tag names or tag IDs)
+exports.filterPostsByTags = async (req, res) => {
+  try {
+
+    // query -> /api/posts/filter?tags=tag1,tag2
+    const tagQuery = req.query.tags;
+
+    if (!tagQuery) {
+      return res.status(400).json({ message: 'Tag names or IDs are required' });
+    }
+
+    // Split the tag names by comma and trim whitespace
+    // This allows for multiple tags to be passed in the query
+    const tagValues = tagQuery.split(',').map(tag => tag.trim());
+
+    // Find tags in the database that match the provided names
+    const tags = await Tag.find({
+      $or: [
+        { name: { $in: tagValues } }
+      ]
+    });
+
+    if (!tags.length) {
+      return res.status(404).json({ message: 'No matching tags found' });
+    }
+
+    const tagIds = tags.map(tag => tag._id);
+
+    const posts = await Post.find({ tags: { $in: tagIds } }).populate('tags');
+
+    res.json(posts);
+  } catch (err) {
+    console.error('Error filtering posts:', err);
     res.status(500).json({ error: err.message });
   }
 };

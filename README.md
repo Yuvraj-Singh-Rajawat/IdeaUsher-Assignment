@@ -1,6 +1,6 @@
-# 📝 Blog Posts REST API (Node.js + MongoDB + AWS S3)
+# 📝 Posts REST API (Node.js + MongoDB + AWS S3)
 
-This is a RESTful API that allows users to create, filter, search, and retrieve blog posts with associated tags and image uploads to AWS S3. It's built with Node.js, Express.js, MongoDB, and AWS SDK v3.
+This is a RESTful API that allows users to create, filter, search, and retrieve posts with associated tags and image uploads to AWS S3. It's built with Node.js, Express.js, MongoDB, and AWS SDK v3.
 
 ## ✅ Features
 
